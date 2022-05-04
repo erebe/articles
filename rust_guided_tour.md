@@ -216,13 +216,14 @@ Here, the state only old the phase we are in, and helps to unroll the seed/state
 
 Manually unrolling our stream from a state is fun but a bit tedious if we have to do it by hand everytime. It would be nice to have something more high level like a generator in python where you have a special keyword `yield` that does all the magic for you
 
+```python
 	# A generator in python with the special keyword yield
 	def firstn(n):
 	    num = 0
 	    while num <= n:
 	        yield num
 	        num += 1
-
+```
  
  
  And like for everything in Rust, if it is not in the language, there is a macro! for that.
@@ -231,26 +232,29 @@ Manually unrolling our stream from a state is fun but a bit tedious if we have t
  
  The [async-stream](https://docs.rs/async-stream/0.3.3/async_stream/) crate provides 2 macros `stream!` and `try_stream!` that allows you to create stream like if it was normal rust code.
  
-
-	let s = stream! {
-	    for i in 0..3 {
-	        yield i;
-	     }
-	};
+```rust
+let s = stream! {
+    for i in 0..3 {
+        yield i;
+     }
+};
+```
 
 
 if we re-take our example from before with 3 phases, it will be simply transformed like this
 
-	let stream = stream! {
-	   yield async { 1 }.await;
-	   yield async { 2 }.await;
-	   yield async { 3 }.await;
-	});
-	
-	assert_eq!(Some(1), stream.next().await);
-	assert_eq!(Some(2), stream.next().await);
-	assert_eq!(Some(3), stream.next().await);
-	assert_eq!(None, stream.next().await);
+```rust
+let stream = stream! {
+   yield async { 1 }.await;
+   yield async { 2 }.await;
+   yield async { 3 }.await;
+});
+
+assert_eq!(Some(1), stream.next().await);
+assert_eq!(Some(2), stream.next().await);
+assert_eq!(Some(3), stream.next().await);
+assert_eq!(None, stream.next().await);
+```
 	
 Much simpler to read right ?  [Internally](https://github.com/tokio-rs/async-stream/blob/6b2725f174716a29b5111f31846c0360433dae73/async-stream/src/async_stream.rs#L42) the macro is going to create a tiny channel on the thread local storage between the future you provide it and the Stream object. The macro replace all `yield` keyword by a send to this tiny channel.
 Finally, when the stream is polled for the next item, it poll in turn the provided future and check after is there is something in the tiny channel for the stream to yield back.
@@ -276,7 +280,7 @@ The only function you will ever need is [next()](https://docs.rs/futures-util/la
 From that you are able to consume it in a regular for/loop fashion inside any async block. 
 Below a simple async function that take a stream emitting int, and return the sum of it values.
 
-```
+```rust
 use futures_util::{pin_mut, Stream, stream, StreamExt};
 
 async fn sum(stream: impl Stream<Item=usize>) -> usize {
@@ -304,7 +308,7 @@ Stream can also be consumed thanks to combinators, there are many of them, like 
 
 A useful one for debugging or simply logging, is the *[inspect](https://docs.rs/futures-util/latest/futures_util/stream/trait.StreamExt.html#method.inspect)* combinator. It allows you to pass a lambda that will take by ref each item emitted by the Stream, without consuming the item. 
 
-```
+```rust
 let stream = stream::iter(vec![1, 2, 3]);
 let mut stream = stream.inspect(|val| println!("{}", val));
     
