@@ -153,7 +153,7 @@ assert_eq!(Some(8), pow2.next().await);
 If you took a look at the import, you will see that we use StreamExt, which is a shortcut for StreamExtension. It is a common practice in Rust to put only the minimal definition of a trait in a file and additional/helper/nicer api in another Extension file. In our case, all the goodies and easy to use functions live in the StreamExt module, and if you don’t import it, you will end-up only with poll_next from the Stream module, which is not really friendly.
 
 Be aware also that Stream trait is not (yet) is the rust std::core like future. They live in the future_utils crate, and StreamExtension are not standard yet also. This often means that you can get confusing/conflicting import due to different library providing different one.
-For example tokio provides different [StreamExt](https://docs.rs/tokio-stream/0.1.8/tokio_stream/trait.StreamExt.html than futures_utils)
+For example tokio provides different [StreamExt](https://docs.rs/tokio-stream/0.1.8/tokio_stream/trait.StreamExt.html) than futures_utils
 If you can, try to stick to futures_utils, as it is the most commonly used crate for everything async/await
 
 ***
