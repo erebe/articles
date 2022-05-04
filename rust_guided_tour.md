@@ -110,7 +110,7 @@ This is a common scenario where you don’t know when your value is becoming rea
 For **[Pin](https://doc.rust-lang.org/std/pin/struct.Pin.html)**, just say briefly that it is a type that enforce your object to not move into memory. You can forget it when you see it, but if you want to dig deeper on this complex topic, I forward you to the article of [fasterthanli](https://fasterthanli.me/articles/pin-and-suffering) or the shorter [Cloudflare article](https://blog.cloudflare.com/pin-and-unpin-in-rust)
 
 ### Simplified flow of retrieving value from a future
-![Simplified view of flow of a Future](/home/erebe/2022-05-03_14-03.png) 
+![Simplified view of flow of a Future](2022-05-03_14-03.png) 
 
 In the schema above, we have a future that is reponsible to retrieve the value from a tcp socket. 
 At first no bytes are ready, so it forward the waker to the reactor, which when he recieve some data call the Waker.wake() function which in turn notify the async runtime to poll again the task.
