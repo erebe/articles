@@ -1,6 +1,6 @@
 # A Guided tour of Stream in Rust
 
-When wanting to make GRPC or Websocket servers for Qovery infrastructure, I found a lot of guide regarding the inner working of futures, but not too many regarding how the Stream API is working in Rust, and more importantly how to use it properly.
+When wanting to make GRPC or Websocket servers for Qovery infrastructure, I found a lot of guide regarding the inner working of futures, but not too many regarding how the Stream API is working in Rust, and more importantly how to use it properly.tes
 
 Sadly, you can't turn a blind eye on Streams as when you go beyond the simple request/response protocol of our beloved REST Api, the notion of [flow](https://kotlinlang.org/docs/flow.html), [async generator](https://peps.python.org/pep-0525/) or more commonly [Stream](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API), arise naturally.
 
